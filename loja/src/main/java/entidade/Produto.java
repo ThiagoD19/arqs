@@ -1,67 +1,59 @@
-package br.unibh.loja.entidades;
+package entidade;
 
-import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
+import java.math.*;
 
-/**
- *  Dados de um Produto
- * @author Thiago Dias
- */
+import javax.persistence.*;
+
 
 @Entity
-@Table(name=" tb_produto", uniqueConstraints = {
+@Table(name="tb_prodruto", uniqueConstraints = {
 	    @UniqueConstraint(columnNames = { "nome"})
 	})
 
-public class Produto {
-
+public class Produto{
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
 	private Long id;
 	
-	@Column(length=100, nullable=false)
+	@Column(name="nome", length=100, nullable=false)
 	private String nome;
 	
-	@Column(length=4000, nullable=false)
+	@Column(name="descricao",length=100, nullable=false)
 	private String descricao;
+	
+	@Column(name="fabricante", length=100, nullable=false)
+	private String fabricante;
 	
 	@ManyToOne(optional=false)
 	@JoinColumn(name="id_categoria", referencedColumnName="id")
 	private Categoria categoria;
 	
-	@Column(nullable= false, precision=14, scale=2) 
+	@Column(name="preco", length=100, precision=14, scale=2, nullable=false)
 	private BigDecimal preco;
-	
-	@Column(length=100, nullable=false)
-	private String fabricante;
 	
 	@Version
 	private Long version;
-
-	public Produto() {
-		super();
+	
+	public Produto(){
+		
 	}
 	
-	public Produto(Long id, String nome, String descricao, Categoria categoria, BigDecimal preco, String fabricante) {
+	public Produto(Long id, String nome, String descricao, String fabricante, Categoria categoria, BigDecimal preco) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.descricao = descricao;
+		this.fabricante = fabricante;
 		this.categoria = categoria;
 		this.preco = preco;
-		this.fabricante = fabricante;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "Produto [id=" + id + ", nome=" + nome + ", descricao=" + descricao + ", fabricante=" + fabricante
+				+ ", categoria=" + categoria + ", preco=" + preco + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -69,11 +61,11 @@ public class Produto {
 		result = prime * result + ((categoria == null) ? 0 : categoria.hashCode());
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
 		result = prime * result + ((fabricante == null) ? 0 : fabricante.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((preco == null) ? 0 : preco.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -99,6 +91,11 @@ public class Produto {
 				return false;
 		} else if (!fabricante.equals(other.fabricante))
 			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
 		if (nome == null) {
 			if (other.nome != null)
 				return false;
@@ -112,79 +109,54 @@ public class Produto {
 		return true;
 	}
 
-	
-	@Override
-	public String toString() {
-		return "Produto [nome=" + nome + ", descricao=" + descricao + ", categoria=" + categoria + ", preco=" + preco
-				+ ", fabricante=" + fabricante + "]";
-	}
-
-	
 	public Long getId() {
 		return id;
 	}
 
-	
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	
 	public String getNome() {
 		return nome;
 	}
 
-	
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
 
 	public String getDescricao() {
 		return descricao;
 	}
 
-	
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
-	
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
-
-	
-	public BigDecimal getPreco() {
-		return preco;
-	}
-
-	
-	public void setPreco(BigDecimal preco) {
-		this.preco = preco;
-	}
-
-	
 	public String getFabricante() {
 		return fabricante;
 	}
 
-	
 	public void setFabricante(String fabricante) {
 		this.fabricante = fabricante;
 	}
-	
-	public Long getVersion() {
-		return version;
+
+	public Categoria getCategoria() {
+		return categoria;
 	}
 
-	public void setVersion(Long version) {
-		this.version = version;
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
-		
+
+	public BigDecimal getPreco() {
+		return preco;
+	}
+
+	public void setPreco(BigDecimal preco) {
+		this.preco = preco;
+	}
+	
+	
+	
 }
