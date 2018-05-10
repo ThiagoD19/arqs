@@ -1,5 +1,4 @@
 package br.unibh.loja.entidades;
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,59 +11,75 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-/**
- * Dados de um Cliente
- * @author Thiago Dias
- */
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
-@Table(name=" tb_cliente", uniqueConstraints = {
-	    @UniqueConstraint(columnNames = { "cpf"}),
-	    @UniqueConstraint(columnNames = { "login"})
+@Table(name="tb_cliente", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = { "nome"}),
+	    @UniqueConstraint(columnNames = { "cpf"})
 	})
 
 public class Cliente {
-	// Atributos privados da classe
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank
+	@Size(min=3, max=100)
+	@Pattern(regexp="[A-zÀ-ú.´ ]*", message="Caracteres permitidos: letras, espaços, ponto e aspas simples")
 	@Column(length=100, nullable=false)
 	private String nome;
 	
+	@NotBlank
+	@Size(min=8, max=15)
+	@Pattern(regexp="[A-z0-1]*", message="Caracteres permitidos: letras,números")
 	@Column(length=15, nullable=false)
 	private String login;
 	
+	@NotBlank
+	@Size(max=100)
 	@Column(length=100, nullable=false)
 	private String senha;
 	
+	@NotBlank
+	@Size(max=100)
+	@Pattern(regexp="[A-zÀ-ú ]*", message="Caracteres permitidos: letras, espaços, acentuação")
 	@Column(length=100, nullable=false)
 	private String perfil;
 	
-	@Column(columnDefinition="CHAR(11)", nullable=false, unique=true)
+	@CPF
+	@Column(length=11, nullable=false)
 	private String cpf;
 	
-	@Column(columnDefinition="CHAR(14)", nullable=false)
+	@Pattern(regexp="\\(\\d{2}\\)\\d{0,1}\\d{4}-\\d{4}", message="Fornecer um telefone no formato (99)09999-9999")
+	@Column(length=14, nullable=false)
 	private String telefone;
 	
-	@Column(length=100, nullable=false)
+	@Email
+	@Column( length=100, nullable=false)
 	private String email;
 	
-	@Temporal(TemporalType.DATE)
+	@Past
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="data_nascimento", nullable=false)
 	private Date dataNascimento;
 	
+	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="data_cadastro", nullable=false)
 	private Date dataCadastro;
 	
 	@Version
-	private Long version;
+	private long version;
 	
-	public Cliente() {
-		super();
-	}
 	
 	public Cliente(Long id, String nome, String login, String senha, String perfil, String cpf, String telefone,
 			String email, Date dataNascimento, Date dataCadastro) {
@@ -80,8 +95,89 @@ public class Cliente {
 		this.dataNascimento = dataNascimento;
 		this.dataCadastro = dataCadastro;
 	}
-
 	
+	
+	public Cliente() {
+		super();
+	}
+
+
+	public long getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getLogin() {
+		return login;
+	}
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+	public String getPerfil() {
+		return perfil;
+	}
+	public void setPerfil(String perfil) {
+		this.perfil = perfil;
+	}
+	public String getCpf() {
+		return cpf;
+	}
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+	public String getTelefone() {
+		return telefone;
+	}
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
+	@Override
+	public String toString() {
+		return "Cliente [id=" + id + ", nome=" + nome + ", login=" + login + ", senha=" + senha + ", perfil=" + perfil
+				+ ", cpf=" + cpf + ", telefone=" + telefone + ", email=" + email + ", dataNascimento=" + dataNascimento
+				+ ", dataCadastro=" + dataCadastro + "]";
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -90,6 +186,7 @@ public class Cliente {
 		result = prime * result + ((dataCadastro == null) ? 0 : dataCadastro.hashCode());
 		result = prime * result + ((dataNascimento == null) ? 0 : dataNascimento.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((perfil == null) ? 0 : perfil.hashCode());
@@ -97,8 +194,6 @@ public class Cliente {
 		result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
 		return result;
 	}
-
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -128,6 +223,11 @@ public class Cliente {
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
 		if (login == null) {
 			if (other.login != null)
 				return false;
@@ -155,117 +255,6 @@ public class Cliente {
 			return false;
 		return true;
 	}
-
 	
-	@Override
-	public String toString() {
-		return "Cliente [nome=" + nome + ", login=" + login + ", senha=" + senha + ", perfil=" + perfil + ", cpf=" + cpf
-				+ ", telefone=" + telefone + ", email=" + email + ", dataNascimento=" + dataNascimento
-				+ ", dataCadastro=" + dataCadastro + "]";
-	}
-
-	
-	public Long getId() {
-		return id;
-	}
-
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	
-	public String getNome() {
-		return nome;
-	}
-
-	
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	
-	public String getLogin() {
-		return login;
-	}
-
-	
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	
-	public String getSenha() {
-		return senha;
-	}
-
-	
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	
-	public String getPerfil() {
-		return perfil;
-	}
-
-	
-	public void setPerfil(String perfil) {
-		this.perfil = perfil;
-	}
-
-	
-	public String getCpf() {
-		return cpf;
-	}
-
-	
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	
-	public String getTelefone() {
-		return telefone;
-	}
-
-	
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-	
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	public Date getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-	
-	public Date getDataCadastro() {
-		return dataCadastro;
-	}
-
-	public void setDataCadastro(Date dataCadastro) {
-		this.dataCadastro = dataCadastro;
-	}
-	
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-
 	
 }
