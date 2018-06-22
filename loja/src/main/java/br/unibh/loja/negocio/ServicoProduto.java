@@ -1,12 +1,16 @@
 package br.unibh.loja.negocio;
 
+
 import java.util.List;
 import java.util.logging.Logger;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
 import br.unibh.loja.entidades.Produto;
+
 
 @Stateless
 @LocalBean
@@ -49,4 +53,11 @@ public class ServicoProduto implements DAO<Produto, Long> {
 		log.info("Encontrando o " + name);
 		return em.createNamedQuery("Produto.findByName").setParameter("nome", "%" + name + "%").getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+		public List<Produto> findByCategoria(Long id_categoria) throws Exception {
+			log.info("Encontrando o " + id_categoria);
+			return em.createNamedQuery("Produto.findByCategoria").setParameter("id_categoria", id_categoria).getResultList();
+		}
+
 }

@@ -5,13 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.constraints.Pattern;
@@ -22,50 +18,30 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name="tb_categoria", uniqueConstraints = {
 	    @UniqueConstraint(columnNames = { "descricao"})
-	})
-@NamedQueries({
-@NamedQuery(name="Categoria.findByName", query = "select o from Categoria o where o.descricao like :nome")
 })
 
+@NamedQueries({
+	@NamedQuery(name="Categoria.findByName", query = "select o from Categoria o where o.descricao like :nome")
+})
 
 public class Categoria {
+	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@NotBlank
-	@Size( max=100)
-	@Pattern(regexp="[A-zÀ-ú -/.']*", message="Caracteres permitidos: letras, espaços, ponto, barra, traço e aspas simples")
-	@Column(length=100, nullable=false)
+	@Size (max=100)
+	@Pattern (regexp="[A-zÀ-ú .'-/]*",
+	message="descriçao tem caracteres invalidos")
+	@Column(length = 100, nullable = false)
 	private String descricao;
 	
 	@Version
-	private long version;
+	private Long version;
 	
-	
-	public Categoria(Long id, String descricao) {
-		super();
-		this.id = id;
-		this.descricao = descricao;
-	}
-	
-	
-	public long getVersion() {
-		return version;
-	}
-
-
-	public void setVersion(long version) {
-		this.version = version;
-	}
-
-
-	public Categoria() {
-		super();
-	}
-
-
 	public Long getId() {
+		
 		return id;
 	}
 	public void setId(Long id) {
@@ -77,9 +53,12 @@ public class Categoria {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	@Override
-	public String toString() {
-		return "Categoria [id=" + id + ", descricao=" + descricao + "]";
+	
+	public Long getVersion() {
+		return version;
+	}
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 	@Override
 	public int hashCode() {
@@ -109,6 +88,18 @@ public class Categoria {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "Categoria [id=" + id + ", descricao=" + descricao + "]";
+	}
+	public Categoria(Long id, String descricao) {
+		super();
+		this.id = id;
+		this.descricao = descricao;
+	}
+	public Categoria() {
+		// TODO Auto-generated constructor stub
 	}
 	
 	
